@@ -23,24 +23,36 @@ setup:
     pattern: "filebeat-*"
 
 output.elasticsearch:
+  enabled: {{ filebeat_output_elasticsearch }}
   hosts: [ {% for node in elasticsearch_cluster_network_addresses %}"{% if elasticsearch_security_http_enabled %}https{% else %}http{% endif %}://{{ node }}:{{ elasticsearch_network_port }}"{% if loop.index != elasticsearch_cluster_network_addresses|length %},{% endif %}{% endfor %} ]
-  index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
+  index: "filebeat-%{+yyyy.MM.dd}"
   username: "${ES_USR}"
   password: "${ES_PWD}"
   ssl.verification_mode: none
   ssl.certificate_authorities: ["/usr/share/filebeat/{{ elasticsearch_certificate_ca_file_ingest }}"]
+
+output.logstash:
+  enabled: {{ filebeat_output_logstash }}
+  loadbalance: true
+  hosts: [ {% for node in logstash_cluster_network_addresses %}"{{ node }}:{{ logstash_network_port }}"{% if loop.index != logstash_cluster_network_addresses|length %},{% endif %}{% endfor %} ]
+  index: "filebeat-%{+yyyy.MM.dd}"
+  ssl.verification_mode: none
+  ssl.certificate_authorities: ["/usr/share/filebeat/{{ elasticsearch_certificate_ca_file_ingest }}"]
+
+queue:
+  spool:
+    file:
+      path: "/usr/share/filebeat/data/spool.dat"
+      size: 1024MiB
+      page_size: 16KiB
+    write:
+      buffer_size: 10MiB
+      flush:
+        timeout: 5s
+        events: 1024
 
 #xpack.monitoring.enabled: true
 #xpack.monitoring.elasticsearch.hosts: "{{ filebeat_elasticsearch_monitoring_hosts|default(["https://172.28.10.90:9200"]) }}"
 #xpack.monitoring.elasticsearch.username: "${ES_MONITORING_USER}"
 #xpack.monitoring.elasticsearch.password: "${ES_MONITORING_PASS}"
 #xpack.monitoring.elasticsearch.ssl.certificate_authorities: "/usr/share/filebeat/{{ elasticsearch_certificate_ca_file_monitoring }}"
-#queue.spool.file.path: "/usr/share/filebeat/data/spool.dat"
-#queue.spool.file.size: 1024MiB
-#queue.spool.file.page_size: 16KiB
-#queue.spool.write.buffer_size: 10MiB
-#queue.spool.write.flush.timeout: 5s
-#queue.spool.write.flush.events: 1024
-#output.logstash.hosts: [{% for addr in logstash_cluster_addresses %}"{{ addr }}:{{ logstash_network_port }}"{% if loop.index != logstash_cluster_addresses|length %},{% endif %}{% endfor %}]
-#output.logstash.ssl.certificate_authorities: ["/usr/share/filebeat/{{ elasticsearch_certificate_ca_file_ingest }}"]
-#output.logstash.loadbalance: true
