@@ -16,6 +16,12 @@ filebeat.inputs:
 #  path: "/tmp/filebeat"
 #  filename: filebeat
 
+Exiting: setup.template.name and setup.template.pattern have to be set if index name is modified
+setup:
+  template:
+    name: "filebeat-%{[agent.version]}"
+    pattern: "filebeat-*"
+
 output.elasticsearch:
   hosts: [ {% for node in elasticsearch_cluster_network_addresses %}"{% if elasticsearch_security_http_enabled %}https{% else %}http{% endif %}://{{ node }}:{{ elasticsearch_network_port }}"{% if loop.index != elasticsearch_cluster_network_addresses|length %},{% endif %}{% endfor %} ]
   index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
