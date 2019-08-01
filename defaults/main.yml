@@ -6,3 +6,4 @@ filebeat_config_dir: /var/dockershared/filebeat/config
 filebeat_data_dir: /var/dockershared/filebeat/data
 filebeat_elasticsearch_monitoring_hosts: ["https://172.28.10.90:9200"]
 filebeat_secrets_file: vault/secrets.yml
+filebeat_setup_template: false 

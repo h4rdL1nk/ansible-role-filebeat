@@ -19,6 +19,7 @@ filebeat.inputs:
 Exiting: setup.template.name and setup.template.pattern have to be set if index name is modified
 setup:
   template:
+    enabled: {{ filebeat_setup_template }}
     name: "filebeat-%{[agent.version]}"
     pattern: "filebeat-*"
 
