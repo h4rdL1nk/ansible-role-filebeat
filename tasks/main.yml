@@ -42,7 +42,7 @@
   args:
     stdin: "{{ item.value }}"
   with_dict: "{{ secrets.filebeat }}"
-  when: keystore_create.changed
+  when: keystore_create.changed or filebeat_force_keystore_write
 
 - name: Deploy filebeat containers
   docker_container:
