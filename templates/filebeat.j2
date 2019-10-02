@@ -64,4 +64,5 @@ monitoring:
     username: "${ES_MONITORING_USER}"
     password: "${ES_MONITORING_PASS}"
     ssl:
+      verification_mode: none 
       certificate_authorities: "/usr/share/filebeat/{{ elasticsearch_certificate_ca_file_ingest }}"
