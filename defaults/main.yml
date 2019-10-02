@@ -4,9 +4,10 @@ filebeat_docker_image: registry.smartdigits.io/infra/filebeat
 filebeat_docker_tag: 7.2.0
 filebeat_config_dir: /var/dockershared/filebeat/config
 filebeat_data_dir: /var/dockershared/filebeat/data
-filebeat_elasticsearch_monitoring_hosts: ["https://172.28.10.90:9200"]
+filebeat_elasticsearch_monitoring_hosts: []
 filebeat_secrets_file: vault/secrets.yml
 filebeat_setup_template: false
 filebeat_setup_ilm: false
 filebeat_output_elasticsearch: true
 filebeat_output_logstash: false
+filebeat_monitoring_enable: false 

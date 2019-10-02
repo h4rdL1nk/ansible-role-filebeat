@@ -57,8 +57,11 @@ queue:
         timeout: 5s
         events: 1024
 
-#xpack.monitoring.enabled: true
-#xpack.monitoring.elasticsearch.hosts: "{{ filebeat_elasticsearch_monitoring_hosts|default(["https://172.28.10.90:9200"]) }}"
-#xpack.monitoring.elasticsearch.username: "${ES_MONITORING_USER}"
-#xpack.monitoring.elasticsearch.password: "${ES_MONITORING_PASS}"
-#xpack.monitoring.elasticsearch.ssl.certificate_authorities: "/usr/share/filebeat/{{ elasticsearch_certificate_ca_file_monitoring }}"
+xpack.monitoring:
+  enabled: {{ filebeat_monitoring_enable }} 
+  elasticsearch:
+    hosts: [ {% for node in filebeat_elasticsearch_monitoring_hosts %}"{% if elasticsearch_security_http_enabled %}https{% else %}http{% endif %}://{{ node }}:{{ elasticsearch_network_port }}"{% if loop.index != filebeat_elasticsearch_monitoring_hosts|length %},{% endif %}{% endfor %} ]
+    username: "${ES_MONITORING_USER}"
+    password: "${ES_MONITORING_PASS}"
+    ssl:
+      certificate_authorities: "/usr/share/filebeat/{{ elasticsearch_certificate_ca_file_ingest }}"
