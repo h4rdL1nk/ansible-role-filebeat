@@ -57,6 +57,7 @@ queue:
         timeout: 5s
         events: 1024
 
+## PR to avoid creating "Standalone cluster" in kibana monitoring when no "output.elasticsearch" is enabled: https://github.com/elastic/beats/pull/13182
 monitoring:
   enabled: {{ filebeat_monitoring_enable }} 
   elasticsearch:
