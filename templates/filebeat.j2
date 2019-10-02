@@ -57,7 +57,7 @@ queue:
         timeout: 5s
         events: 1024
 
-xpack.monitoring:
+monitoring:
   enabled: {{ filebeat_monitoring_enable }} 
   elasticsearch:
     hosts: [ {% for node in filebeat_elasticsearch_monitoring_hosts %}"{% if elasticsearch_security_http_enabled %}https{% else %}http{% endif %}://{{ node }}:{{ elasticsearch_network_port }}"{% if loop.index != filebeat_elasticsearch_monitoring_hosts|length %},{% endif %}{% endfor %} ]
