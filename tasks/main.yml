@@ -61,7 +61,7 @@
     labels:
       SERVICE_TYPE: filebeat 
       SERVICE_OWNER: infra
-      SERVICE_LABEL: clusterpre
+      SERVICE_LABEL: "{{ filebeat_cluster_name }}" 
     volumes:
       - "{{ filebeat_data_dir }}:/usr/share/filebeat/data:rw,Z"
       - "{{ filebeat_config_dir }}/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro,Z"
