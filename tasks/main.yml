@@ -54,6 +54,7 @@
     image: "{{ filebeat_docker_image }}:{{ filebeat_docker_tag }}"
     detach: true
     restart_policy: unless-stopped
+    security_opts: "{{ filebeat_docker_security_opts }}"
     log_driver: json-file
     log_options:
       max-size: '30m'
