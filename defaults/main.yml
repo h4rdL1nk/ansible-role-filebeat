@@ -3,6 +3,7 @@
 filebeat_docker_image: registry.smartdigits.io/infra/filebeat
 filebeat_docker_tag: 7.2.0
 filebeat_docker_security_opts: []
+filebeat_docker_container_memory: 1024 
 filebeat_config_dir: /var/dockershared/filebeat/config
 filebeat_data_dir: /var/dockershared/filebeat/data
 filebeat_cluster_name: default

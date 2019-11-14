@@ -55,6 +55,7 @@
     detach: true
     restart_policy: unless-stopped
     security_opts: "{{ filebeat_docker_security_opts }}"
+    memory: "{{ filebeat_docker_container_memory | default( ( ansible_memtotal_mb / 8 ) | int ) }}m"
     log_driver: json-file
     log_options:
       max-size: '30m'
