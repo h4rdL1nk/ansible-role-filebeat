@@ -68,7 +68,7 @@
       - "{{ filebeat_data_dir }}:/usr/share/filebeat/data:rw,Z"
       - "{{ filebeat_config_dir }}/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro,Z"
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro,z
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - "{{ filebeat_config_dir }}/{{ elasticsearch_certificate_ca_file_ingest }}:/usr/share/filebeat/{{ elasticsearch_certificate_ca_file_ingest }}:ro,Z"
       - "{{ filebeat_config_dir }}/{{ elasticsearch_certificate_ca_file_monitoring }}:/usr/share/filebeat/{{ elasticsearch_certificate_ca_file_monitoring }}:ro,Z"
     command: "filebeat -e -strict.perms=false -E name={{ ansible_hostname }}"
