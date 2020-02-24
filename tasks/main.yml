@@ -68,7 +68,7 @@
 - name: Deploy filebeat containers
   docker_container:
     state: started
-    restart: "{{ ( filebeat_config is defined and filebeat_config.changed) or (keystore create is defined and keystore_create.changed) or (keystore_write is defined and keystore_write.changed) }}"
+    restart: "{{ ( filebeat_config is defined and filebeat_config.changed) or (keystore_create is defined and keystore_create.changed) or (keystore_write is defined and keystore_write.changed) }}"
     name: "smd_infra_filebeat"
     user: root
     image: "{{ filebeat_docker_image }}:{{ filebeat_docker_tag }}"
