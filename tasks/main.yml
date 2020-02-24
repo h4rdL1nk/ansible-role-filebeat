@@ -8,6 +8,9 @@
   with_items:
     - "{{ filebeat_config_dir }}"
     - "{{ filebeat_data_dir }}"
+  tags:
+    - configuration
+    - files
 
 - name: Copy SSL certificates
   copy:
@@ -16,12 +19,19 @@
   with_items:
     - "{{ elasticsearch_certificate_ca_file_ingest }}"
     - "{{ elasticsearch_certificate_ca_file_monitoring }}"
+  tags:
+    - configuration
+    - files
+    - certificates
 
 - name: Copy filebeat configuration
   template:
     src: filebeat.j2
     dest: "{{ filebeat_config_dir }}/filebeat.yml"
   register: filebeat_config
+  tags:
+    - configuration
+    - files
 
 # fatal: [0e6d6f46-206a-4a95-a93d-03b35522073c]: FAILED! => {"changed": false, "msg": "Docker SDK for Python version is 1.10.6 (micro-sdi-epg-inet-01's Python /usr/bin/python). Minimum version required is 2.1.0 to set auto_remove option. Try `pip uninstall docker-py` followed by `pip install docker`."}
 # docker run -i --rm -v /var/dockershared/filebeat/data:/usr/share/filebeat/data:rw,Z --user root registry.smartdigits.io/infra/filebeat:6.8.1 keystore list
@@ -32,10 +42,16 @@
   args:
     creates: "{{ filebeat_data_dir }}/filebeat.keystore"
   register: keystore_create
+  tags:
+    - configuration
+    - files
+    - keystore
 
 - name: Load filebeat secrets
   include_vars:
     file: "{{ lookup('env', 'PWD') }}/{{ filebeat_secrets_file|default('vault/secrets.yml')}}"
+  tags:
+    - configuration
 
 - name: Add filebeat keystore keys
   command: "docker run --rm -i -v {{ filebeat_data_dir }}:/usr/share/filebeat/data:rw,Z --user root {{ filebeat_docker_image }}:{{ filebeat_docker_tag }} keystore add --stdin --force {{ item.key }}"
@@ -44,11 +60,15 @@
   with_dict: "{{ secrets.filebeat }}"
   when: keystore_create.changed or filebeat_force_keystore_write
   register: keystore_write
+  tags:
+    - configuration
+    - files
+    - keystore
 
 - name: Deploy filebeat containers
   docker_container:
     state: started
-    restart: "{{ filebeat_config.changed or keystore_create.changed or keystore_write.changed }}"
+    restart: "{{ ( filebeat_config is defined and filebeat_config.changed) or (keystore create is defined and keystore_create.changed) or (keystore_write and keystore_write.changed) }}"
     name: "smd_infra_filebeat"
     user: root
     image: "{{ filebeat_docker_image }}:{{ filebeat_docker_tag }}"
@@ -72,3 +92,5 @@
       - "{{ filebeat_config_dir }}/{{ elasticsearch_certificate_ca_file_ingest }}:/usr/share/filebeat/{{ elasticsearch_certificate_ca_file_ingest }}:ro,Z"
       - "{{ filebeat_config_dir }}/{{ elasticsearch_certificate_ca_file_monitoring }}:/usr/share/filebeat/{{ elasticsearch_certificate_ca_file_monitoring }}:ro,Z"
     command: "filebeat -e -strict.perms=false -E name={{ ansible_hostname }}"
+  tags:
+    - deploy
