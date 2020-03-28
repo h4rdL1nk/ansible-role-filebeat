@@ -17,3 +17,6 @@ filebeat_output_logstash: false
 filebeat_monitoring_enable: false 
 filebeat_force_keystore_write: false
 filebeat_logging_level: info
+filebeat_http_enabled: False
+filebeat_http_port: 9600
+filebeat_http_host: 0.0.0.0

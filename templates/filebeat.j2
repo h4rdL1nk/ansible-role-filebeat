@@ -73,3 +73,9 @@ monitoring:
 logging:
   level: {{ filebeat_logging_level }} 
   selectors: '*'
+
+{% if filebeat_http_enabled %}
+http:
+  host: {{ filebeat_http_host }} 
+  port: {{ filebeat_http_port }} 
+{% endif %}
