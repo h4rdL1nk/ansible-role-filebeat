@@ -24,6 +24,27 @@
     - files
     - certificates
 
+- name: Load filebeat secrets
+  include_vars:
+    file: "{{ lookup('env', 'PWD') }}/{{ filebeat_secrets_file|default('vault/secrets.yml')}}"
+  tags:
+    - configuration
+
+- name: Get elasticsearch cluster UUID
+  uri: 
+    method: GET
+    url_username: elastic
+    url_password: "{{ secrets.elasticsearch.users.elastic }}"
+    url: "{% if elasticsearch_security_http_enabled %}https{% else %}http{% endif %}://{{ elasticsearch_cluster_network_addresses[0] }}:{{ elasticsearch_network_port }}"
+    remote_src: True
+    return_content: True
+    validate_certs: False
+  register: cluster_uuid
+  
+- name: Set cluster UUID variable
+  set_fact:
+    filebeat_cluster_uuid: "{{ cluster_uuid.json.cluster_uuid }}"
+
 - name: Copy filebeat configuration
   template:
     src: filebeat.j2
@@ -46,12 +67,6 @@
     - configuration
     - files
     - keystore
-
-- name: Load filebeat secrets
-  include_vars:
-    file: "{{ lookup('env', 'PWD') }}/{{ filebeat_secrets_file|default('vault/secrets.yml')}}"
-  tags:
-    - configuration
 
 - name: Add filebeat keystore keys
   command: "docker run --rm -i -v {{ filebeat_data_dir }}:/usr/share/filebeat/data:rw,Z --user root {{ filebeat_docker_image }}:{{ filebeat_docker_tag }} keystore add --stdin --force {{ item.key }}"

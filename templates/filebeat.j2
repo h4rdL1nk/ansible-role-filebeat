@@ -1,4 +1,7 @@
-monitoring.cluster_uuid: "{{ filebeat_cluster_name }}"
+
+{% if filebeat_output_logstash %}
+monitoring.cluster_uuid: "{{ filebeat_cluster_uuid }}"
+{% endif %}
 
 filebeat.inputs:
 - type: docker
