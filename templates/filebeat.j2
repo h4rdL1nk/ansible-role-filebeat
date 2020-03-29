@@ -1,3 +1,5 @@
+monitoring.cluster_uuid: "{{ filebeat_cluster_name }}"
+
 filebeat.inputs:
 - type: docker
   multiline.pattern: '^[[:space:]]'
