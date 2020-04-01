@@ -39,6 +39,7 @@
     remote_src: True
     return_content: True
     validate_certs: False
+  when: not filebeat_output_logstash
   register: cluster_uuid
   
 - name: Set cluster UUID variable
