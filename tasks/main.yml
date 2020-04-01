@@ -45,6 +45,7 @@
 - name: Set cluster UUID variable
   set_fact:
     filebeat_cluster_uuid: "{{ cluster_uuid.json.cluster_uuid }}"
+  when: not filebeat_output_logstash
 
 - name: Copy filebeat configuration
   template:
