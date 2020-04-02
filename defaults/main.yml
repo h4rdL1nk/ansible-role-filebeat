@@ -9,6 +9,7 @@ filebeat_config_dir: /var/dockershared/filebeat/config
 filebeat_data_dir: /var/dockershared/filebeat/data
 filebeat_cluster_name: default
 filebeat_cluster_uuid: dummy
+filebeat_set_cluster_uuid: true
 filebeat_elasticsearch_monitoring_hosts: []
 filebeat_secrets_file: vault/secrets.yml
 filebeat_setup_template: false

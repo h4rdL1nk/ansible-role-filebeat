@@ -1,5 +1,5 @@
 
-{% if filebeat_output_logstash %}
+{% if filebeat_set_cluster_uuid %}
 monitoring.cluster_uuid: "{{ filebeat_cluster_uuid }}"
 {% endif %}
 
