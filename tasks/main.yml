@@ -75,7 +75,7 @@
   command: "docker run --rm -i -v {{ filebeat_data_dir }}:/usr/share/filebeat/data:rw,Z --user root {{ filebeat_docker_image }}:{{ filebeat_docker_tag }} keystore add --stdin --force {{ item.key }}"
   args:
     stdin: "{{ item.value }}"
-  with_dict: "{{ secrets.filebeat }}"
+  with_dict: "{{ secrets.filebeat_keystore_keys }}"
   when: keystore_create.changed or filebeat_force_keystore_write
   register: keystore_write
   tags:
