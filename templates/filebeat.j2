@@ -49,6 +49,10 @@ output.logstash:
   ssl:
     verification_mode: none
     certificate_authorities: ["/usr/share/filebeat/{{ elasticsearch_certificate_ca_file_ingest }}"]
+{% if filebeat_logstash_client_auth_enabled == "true" %}
+    certificate: "/usr/share/filebeat/{{ filebeat_logstash_auth_certificate }}"
+    key: "/usr/share/filebeat/{{ filebeat_logstash_auth_key }}"
+{% endif %}
 
 queue:
   spool:

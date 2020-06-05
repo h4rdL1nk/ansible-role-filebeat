@@ -23,3 +23,8 @@ filebeat_logging_level: info
 filebeat_http_enabled: False
 filebeat_http_port: 9600
 filebeat_http_host: 0.0.0.0
+
+
+filebeat_logstash_client_auth_enabled: false
+filebeat_logstash_auth_certificate: instance.crt
+filebeat_logstash_auth_key: instance.key
