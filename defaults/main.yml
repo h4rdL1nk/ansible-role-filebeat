@@ -2,7 +2,7 @@
 
 filebeat_docker_image: registry.smartdigits.io/infra/filebeat
 filebeat_docker_tag: 7.2.0
-filebeat_docker_api_version: 1.22
+filebeat_docker_api_version: 1.26
 filebeat_docker_security_opts: 
   - label:type:container_runtime_t
 filebeat_docker_container_memory: 512 
